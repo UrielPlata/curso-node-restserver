@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 
+const { dbConnection } = require('../database/config');
+
 class Server {
 
   // metodo constructor de la clase
@@ -8,6 +10,9 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.usuariosPath = '/api/usuarios';
+
+    // Conectar a base de datos
+    this.conectarDB();
 
     //Midleware
     // funciones que añaden funcionalidad a mi webserver
@@ -18,6 +23,10 @@ class Server {
     this.routes();
   }
 
+  async conectarDB() {
+    await dbConnection();
+  }
+
   middlewares(){
 
     // CORS
@@ -25,7 +34,7 @@ class Server {
 
     // Lectura y parseo del body
     this.app.use(express.json() );
-    
+
     // Directorio publico
     this.app.use(express.static('public') );
   }
